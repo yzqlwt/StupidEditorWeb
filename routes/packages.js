@@ -8,7 +8,7 @@ let upload = multer({
   storage: multer.diskStorage({
       //设置文件存储位置
       destination: function (req, file, cb) {
-          let dir = "./uploads/" + "TemplateId" + req.headers.template_id + "/SkinId" + req.headers.itemId
+          let dir = "/www/wwwroot/data/" + "TemplateId" + req.headers.template_id + "/SkinId" + req.headers.itemId
 
           //判断目录是否存在，没有则创建
           if (!fs.existsSync(dir)) {
@@ -29,18 +29,19 @@ let upload = multer({
 
 function getRes(){
   let content = fs.readFileSync("../config/resources.json")
-  return JSON.parse(content)
+  return content;
 };
 
-router.post('/uploads', upload.single('ResConfig'), function (req, res) {
-  console.log(req.file);
+router.post('/uploadSingle', upload.single('ResConfig'), function (req, res) {
   let config = getRes();
+  console.log("上传成功！")
   res.end('ok');
 });
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  console.log("获取ResList")
+  res.send(getRes());
 });
 
 
