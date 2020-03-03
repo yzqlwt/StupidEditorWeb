@@ -8,7 +8,7 @@ let upload = multer({
   storage: multer.diskStorage({
       //设置文件存储位置
       destination: function (req, file, cb) {
-          let dir = "/www/wwwroot/attachments/" + "TemplateId" + req.headers.template_id + "/SkinId" + req.headers.itemId
+          let dir = "/www/wwwroot/attachments/" + "TemplateId-" + req.headers.template_id + "/SkinId-" + req.headers.item_id
 
           //判断目录是否存在，没有则创建
           if (!fs.existsSync(dir)) {
@@ -29,12 +29,27 @@ let upload = multer({
 
 function getRes(){
   let content = fs.readFileSync(__dirname+"/../config/resources.json")
-  return content;
+  return JSON.parse(content);
 };
+function setRes(str){
+  fs.writeFileSync(__dirname+"/../config/resources.json", str)
+}
 
 router.post('/uploadSingle', upload.single('ResConfig'), function (req, res) {
   let config = getRes();
-  console.log("上传成功！")
+  let template_id = req.headers.template_id;
+  let skin_id = req.headers.item_id;
+  if(!config["TemplateId-"+template_id]){
+    config["TemplateId-"+template_id] = {}
+  }
+  let templateConfig = config["TemplateId-"+template_id]
+  if(!templateConfig["SkinId-"+skin_id]){
+    templateConfig["SkinId-"+skin_id] = []
+  }
+  let skinConfig = templateConfig["SkinId-"+skin_id]
+  skinConfig.push("TemplateId-"+template_id+"/SkinId-"+skin_id+"/"+req.file.filename)
+  setRes(JSON.stringify(config))
+  console.log("上传成功！"+JSON.stringify(config))
   res.end('ok');
 });
 
@@ -43,7 +58,7 @@ router.get('/', function(req, res, next) {
   console.log("获取ResList")
   res.json({
     message:"success",
-    data:JSON.parse(getRes())
+    data:getRes()
   });
 });
 
