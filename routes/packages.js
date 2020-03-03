@@ -28,7 +28,7 @@ let upload = multer({
 });
 
 function getRes(){
-  let content = fs.readFileSync("./config/resources.json")
+  let content = fs.readFileSync("../config/resources.json")
   return content;
 };
 
@@ -41,7 +41,7 @@ router.post('/uploadSingle', upload.single('ResConfig'), function (req, res) {
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   console.log("获取ResList")
-  res.send(getRes());
+  res.json(getRes());
 });
 
 
