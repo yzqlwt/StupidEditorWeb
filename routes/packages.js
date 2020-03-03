@@ -8,7 +8,7 @@ let upload = multer({
   storage: multer.diskStorage({
       //设置文件存储位置
       destination: function (req, file, cb) {
-          let dir = "/www/wwwroot/data/" + "TemplateId" + req.headers.template_id + "/SkinId" + req.headers.itemId
+          let dir = "/www/wwwroot/attachments/" + "TemplateId" + req.headers.template_id + "/SkinId" + req.headers.itemId
 
           //判断目录是否存在，没有则创建
           if (!fs.existsSync(dir)) {
