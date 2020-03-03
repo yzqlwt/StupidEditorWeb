@@ -28,7 +28,7 @@ let upload = multer({
 });
 
 function getRes(){
-  let content = fs.readFileSync("../config/resources.json")
+  let content = fs.readFileSync("./config/resources.json")
   return content;
 };
 
