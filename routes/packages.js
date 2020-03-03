@@ -8,13 +8,13 @@ let upload = multer({
   storage: multer.diskStorage({
       //设置文件存储位置
       destination: function (req, file, cb) {
-          let dir = "/www/wwwroot/attachments/" + "TemplateId-" + req.headers.template_id + "/SkinId-" + req.headers.item_id
-
+        let template_id = req.headers["template-id"];
+        let skin_id = req.headers["item-id"];
+          let dir = "/www/wwwroot/attachments/" + "TemplateId-" +template_id + "/SkinId-" + skin_id
           //判断目录是否存在，没有则创建
           if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir, {recursive: true});
           }
-
           //dir就是上传文件存放的目录
           cb(null, dir);
       },
@@ -36,9 +36,10 @@ function setRes(str){
 }
 
 router.post('/uploadSingle', upload.single('ResConfig'), function (req, res) {
+  console.log(req.headers)
   let config = getRes();
-  let template_id = req.headers.template_id;
-  let skin_id = req.headers.item_id;
+  let template_id = req.headers["template-id"];
+  let skin_id = req.headers["item-id"];
   if(!config["TemplateId-"+template_id]){
     config["TemplateId-"+template_id] = {}
   }
